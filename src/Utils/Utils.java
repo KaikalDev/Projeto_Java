@@ -114,4 +114,33 @@ public class Utils {
         contaMap.Cadastro(conta);
         System.out.println(conta);
     }
+
+    public int displayIfos(Conta contaAtiva) {
+        String header = "------ Conta Nº " + contaAtiva.getNumeroConta() + " ------";
+        String display = header + "\n"
+                + "Olá " + contaAtiva.getTitular().getNome() + "\n"
+                + "Saldo da Conta Corrente: " + contaAtiva.getSaldo() + "\n"
+                + "Saldo sa Conta Poupança: " + contaAtiva.getCP().getSaldo() + "\n"
+                + "-".repeat(header.length());
+        String Actions = "Ações: \n"
+                + "1 - Depósito na Conta Corrente \n"
+                + "2 - Saque na Conta Corrente \n"
+                + "3 - Depósito na Poupança \n"
+                + "4 - Saque na Poupança \n"
+                + "5 - Simular Rendimentos \n"
+                + "6 - Consultar Extrato \n"
+                + "7 - Alterar senha \n"
+                + "0 - Sair \n"
+                + "-".repeat(header.length());
+
+        System.out.println(display);
+        int resposta;
+        do {
+            System.out.println(Actions);
+            resposta = sc.nextInt();
+            sc.nextLine();
+        } while (resposta < 0 || resposta > 7);
+
+        return resposta;
+    }
 }

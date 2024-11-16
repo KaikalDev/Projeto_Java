@@ -2,9 +2,41 @@ package models;
 
 import models.Interfaces.IContaPoupanca;
 
-public class ContaPoupanca extends Conta implements IContaPoupanca {
+public class ContaPoupanca implements IContaPoupanca {
+    private Pessoa titular;
+    private Long numeroConta;
+    private Double saldo;
+    private Long senha;
+
     public ContaPoupanca(Pessoa titular, Long numeroConta, Double saldo, Long senha) {
-        super(titular, numeroConta, saldo, senha);
+        this.titular = titular;
+        this.numeroConta = numeroConta;
+        this.saldo = saldo;
+        this.senha = senha;
+    }
+
+    public Pessoa getTitular() {
+        return titular;
+    }
+
+    public void setTitular(Pessoa titular) {
+        this.titular = titular;
+    }
+
+    public Double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(Double saldo) {
+        this.saldo = saldo;
+    }
+
+    public Long getNumeroConta() {
+        return numeroConta;
+    }
+
+    public void setNumeroConta(Long numeroConta) {
+        this.numeroConta = numeroConta;
     }
 
     @Override
@@ -14,6 +46,10 @@ public class ContaPoupanca extends Conta implements IContaPoupanca {
                 this.setSaldo(this.getSaldo() + valor);
             }
         }
+    }
+
+    private boolean VerificaSenha(Long senha) {
+        return senha.equals(this.senha);
     }
 
     @Override

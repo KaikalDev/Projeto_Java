@@ -10,4 +10,6 @@ public interface IConta {
     Boolean VerificaSenha(Long senha);
 
     Boolean AlteraSenha(Long newSenha, Long senha);
+
+    Object[][] SimularRendimnto(Integer totalMeses);
 }
