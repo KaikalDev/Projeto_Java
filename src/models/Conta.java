@@ -1,8 +1,10 @@
 package models;
 
+import Utils.Utils;
 import Utils.map.Extrato;
 import models.Interfaces.IConta;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,21 +16,23 @@ public class Conta implements IConta {
     private ContaPoupanca CP;
     private final Extrato extrato;
 
+    private static Utils utils = new Utils();
+
     public Conta(Pessoa titular, Long numeroConta, Double saldo, Long senha) {
         this.titular = titular;
         this.numeroConta = numeroConta;
         this.saldo = saldo;
         Senha = senha;
-        this.CP = new ContaPoupanca(titular, numeroConta, 0.00, senha);
+        this.CP = new ContaPoupanca(titular, numeroConta, 0.00, senha, this);
         this.extrato = new Extrato();
     }
 
     public Extrato getExtrato() {
-        return extrato;
+        return this.extrato;
     }
 
-    public String setExtrato(int TotalMeses) {
-        return extrato.toString(TotalMeses, getSaldo(), getCP().getSaldo());
+    public String printExtrato(int TotalMeses) {
+        return this.extrato.print(TotalMeses);
     }
 
     public Pessoa getTitular() {
@@ -73,19 +77,28 @@ public class Conta implements IConta {
 
     @Override
     public void Depositar(Double valor) {
+        Transacao transacao = new Transacao(new Date(), valor, false, false, getSaldo(), getCP().getSaldo());
         setSaldo(this.saldo + valor);
-        Transacao transacao = new Transacao(new Date(), valor, false, false);
         System.out.println(transacao);
         extrato.addToExtrato(transacao);
     }
 
     @Override
     public boolean Sacar(Double valor, Long senha) {
-        if (getSaldo() >= valor && VerificaSenha(senha)) {
-            setSaldo(this.saldo - valor);
-            return true;
+        if (!VerificaSenha(senha)) {
+            utils.error("Senha incorreta", "A senha informada é invalida");
+            return false;
         }
-        return false;
+        if (getSaldo() < valor) {
+            utils.error("Saldo insuficiente", "Não a Saldo suficiente para completar a transação");
+            return false;
+        }
+
+        Transacao transacao = new Transacao(new Date(), valor, true, false, getSaldo(), getCP().getSaldo());
+        setSaldo(this.saldo - valor);
+        System.out.println(transacao);
+        extrato.addToExtrato(transacao);
+        return true;
     }
 
     @Override
@@ -95,12 +108,11 @@ public class Conta implements IConta {
 
 
     @Override
-    public Boolean AlteraSenha(Long newSenha, Long senha) {
+    public void AlteraSenha(Long newSenha, Long senha) {
         if (Objects.equals(senha, this.Senha)) {
             this.Senha = newSenha;
-            return true;
+            System.out.println("Senha alterada com sucesso");
         }
-        return false;
     }
 
     @Override
@@ -112,25 +124,28 @@ public class Conta implements IConta {
     }
 
     @Override
-    public Object[][] SimularRendimnto(Integer totalMeses) {
-        if (totalMeses <= 12 && this.getSaldo() >= 100) {
-            /* Erro o maximo é 12 meses */
-            /* Info do saldo < 100 */
-            Object[][] matriz = new Object[totalMeses][2];
-            Double saldoSimulacao = this.getSaldo();
-            double rendimento = 0.00;
+    public String SimularRendimnto(Integer totalMeses) {
+        Double saldoSimulacao = this.getSaldo();
+        double rendimento = 0.00;
 
-            for (int mes = 1; mes <= totalMeses; mes++) {
-                if (saldoSimulacao > 100) {
-                    rendimento += (saldoSimulacao / 100) * 0.05;
-                    saldoSimulacao += rendimento;
-                }
-                matriz[mes][0] = mes;
-                matriz[mes][1] = saldoSimulacao;
-            }
+        StringBuilder sb = new StringBuilder();
 
-            return matriz;
+        sb.append("------ Simulação do rendimento ------\n");
+        sb.append("Mês | Rendimento | Saldo\n");
+
+        int mesAtual = java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) + 1;
+
+        for (int mes = 0; mes < totalMeses; mes++) {
+            int mesSimulacao = (mesAtual + mes - 1) % 12 + 1;
+
+            rendimento = (saldoSimulacao / 100) * 0.05;
+
+            saldoSimulacao += rendimento;
+
+            sb.append(String.format("%2d  | %.2f R$  | %.2f R$\n", mesSimulacao, rendimento, saldoSimulacao));
         }
-        return null;
+
+        return sb.toString();
     }
+
 }

@@ -1,6 +1,7 @@
 import Utils.Utils;
 import models.Conta;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -48,16 +49,77 @@ public class Main {
                     main(args);
                     break;
                 case 1:
-                    System.out.print("\nDigite o valor a depositar:\n R$ ");
-                    Double valor = sc.nextDouble();
-                    sc.nextLine();
-                    contaAtiva.Depositar(valor);
+                    Double valorDeposito = utils.getvalor("\nInforme o valor a depositar:\n R$ ");
+                    contaAtiva.Depositar(valorDeposito);
+                    break;
                 case 2:
+                    Double valorSaque = utils.getvalor("\nInforme o valor a Sacar:\n R$ ");
+                    Long senhaSaque = utils.getSenha("Iforme a senha para Sacar");
+                    contaAtiva.Sacar(valorSaque,senhaSaque);
+                    break;
                 case 3:
+                    Double valorDepositoCP = utils.getvalor("\nInforme o valor para depositar na poupança:\n R$ ");
+                    Long senhaDepositoCP = utils.getSenha("Iforme sua senha");
+                    contaAtiva.getCP().DepositarCP(valorDepositoCP,senhaDepositoCP);
+                    break;
                 case 4:
+                    Double valorSaqueCP = utils.getvalor("\nInforme o valor para sacar da poupança:\n R$ ");
+                    Long senhaSaqueCP = utils.getSenha("Iforme sua senha");
+                    contaAtiva.getCP().SacarCP(valorSaqueCP,senhaSaqueCP);
+                    break;
                 case 5:
+                    Integer TotalMesesSimulacao = null;
+                    while (TotalMesesSimulacao == null) {
+                        try {
+                            System.out.println("Informe o total de meses para a simulação (Max: 12): ");
+                            TotalMesesSimulacao = sc.nextInt();
+                            sc.nextLine();
+
+                            if (TotalMesesSimulacao > 12) {
+                                utils.error("O maximo de messes é 12", "Informe um total de meses menor que 12");
+                                TotalMesesSimulacao = null;
+                            }
+                        } catch (InputMismatchException e) {
+                            utils.error("Formato invalido", "Informe apenas numeros");
+                            sc.nextLine();
+                        }
+                    }
+                    if (contaAtiva.getSaldo() < 100) {
+                        utils.error("Saldo insuficiente", "O rendimento requer no minimo 100 R$ de saldo ");
+                        break;
+                    }
+                    System.out.println(contaAtiva.SimularRendimnto(TotalMesesSimulacao));
+                    break;
                 case 6:
+                    Integer TotalMesesExtrato = null;
+                    while (TotalMesesExtrato == null) {
+                        try {
+                            System.out.println("Informe o total de meses para a simulação (Max: 12): ");
+                            TotalMesesExtrato = sc.nextInt();
+                            sc.nextLine();
+
+                            if (TotalMesesExtrato > 12) {
+                                utils.error("O maximo de messes é 12", "Informe um total de meses menor que 12");
+                                TotalMesesExtrato = null;
+                            }
+                        } catch (InputMismatchException e) {
+                            utils.error("Formato invalido", "Informe apenas numeros");
+                            sc.nextLine();
+                        }
+                    }
+
+                    System.out.println(contaAtiva.printExtrato(TotalMesesExtrato));
+                    break;
                 case 7:
+                    Long senhaOriginal = utils.getSenha("Iforme sua senha");
+                    if (!contaAtiva.VerificaSenha(senhaOriginal)) {
+                        utils.error("Senha incorreta", "A senha informada é invalida");
+                    }
+                    Long newSenha = utils.getSenha("Iforme sua Nova senha (4 Digitos): ");
+                    contaAtiva.AlteraSenha(newSenha,senhaOriginal);
+                    setContaAtiva(null);
+                    main(args);
+                    break;
             }
         }
     }

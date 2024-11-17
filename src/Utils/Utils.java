@@ -13,7 +13,7 @@ public class Utils {
     static Scanner sc = new Scanner(System.in);
     static Random random = new Random();
     private static Utils utils = new Utils();
-    private final IContaMap contaMap = new ContaMap();
+    public final IContaMap contaMap = new ContaMap();
 
     public void error(String type, String menssage) {
         String header = "------ Erro "+type+" ------";
@@ -21,6 +21,42 @@ public class Utils {
                 menssage + "  \n" +
                 "-".repeat(header.length());
         System.out.println(text);
+    }
+
+    public Long getSenha(String text) {
+        Long senha = null;
+        while (senha == null) {
+            try {
+                System.out.println(text);
+                senha = sc.nextLong();
+                sc.nextLine();
+
+                if (senha < 1000 || senha > 9999) {
+                    error("Senha invalida","A senha deve ter 4 Digitos");
+                    senha = null;
+                }
+            } catch (InputMismatchException e) {
+                error("Senha invalida", "A senha deve ser apenas numeros");
+                sc.nextLine();
+            }
+        }
+
+        return senha;
+    }
+
+    public Double getvalor(String text) {
+        Double valor = null;
+        while (valor == null) {
+            try {
+                System.out.print(text);
+                valor = sc.nextDouble();
+                sc.nextLine();
+            } catch (InputMismatchException e) {
+                error("Valor invalido", "Informe o valor no formato (0.00)");
+                sc.nextLine();
+            }
+        }
+        return valor;
     }
 
     public Conta Login() {
@@ -85,22 +121,7 @@ public class Utils {
         Long cpf = Long.parseLong(sc.nextLine().replace(".","")
                 .replace("-","").replace(" ", ""));
 
-        Long senha = null;
-        while (senha == null) {
-            try {
-                System.out.println("Senha (4 Digitos): ");
-                senha = sc.nextLong();
-                sc.nextLine();
-
-                if (senha < 1000 || senha > 9999) {
-                    error("Senha invalida","A senha deve ter 4 Digitos");
-                    senha = null;
-                }
-            } catch (InputMismatchException e) {
-                error("Senha invalida", "A senha deve ser apenas numeros");
-                sc.nextLine();
-            }
-        }
+        Long senha = getSenha("Senha (4 Digitos): ");
 
         Long numeroConta;
         do {

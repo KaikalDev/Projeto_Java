@@ -1,87 +1,76 @@
 package Utils.map;
 
+import Utils.Utils;
 import models.Transacao;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Extrato {
-    private final Map<Date, Transacao> extratoMap;
+    private final List<Transacao> transacoes;
+    private static Utils utils = new Utils();
 
     public Extrato() {
-        this.extratoMap = new HashMap<>();
+        this.transacoes = new ArrayList<>();
     }
 
     public void addToExtrato(Transacao transacao) {
         if (transacao.isSaque()) {
             transacao.setValor(transacao.getValor() * -1);
         }
-        this.extratoMap.put(transacao.getDateTime(), transacao);
+        this.transacoes.add(transacao);
     }
 
-    public String toString(int totalMeses, Double SaldoCC, Double SaldoCP) {
+    public String print(int totalMeses) {
         SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar limite = Calendar.getInstance();
+        limite.add(Calendar.MONTH, -totalMeses);
 
-        Calendar calendario = Calendar.getInstance();
-        calendario.add(Calendar.MONTH, -totalMeses);
+        List<Transacao> transacoesFiltradas = transacoes.stream()
+                .filter(t -> t.getDateTime().after(limite.getTime()))
+                .collect(Collectors.toList());
 
-        Date diaAtual = null;
+        if (transacoesFiltradas.isEmpty()) {
+            utils.error("Nenhuma transação encontrada", "Nenhuma transação encontrada no intervalo especificado");
+            return "";
+        }
 
-        StringBuilder extratoFormatado = new StringBuilder();
-        extratoFormatado.append("--------- Extrato Bancário ---------\n");
+        Transacao transacaoMaisAntiga = transacoesFiltradas.get(0);
+        StringBuilder extrato = new StringBuilder("--------- Extrato Bancário ---------\n");
 
-        for (Map.Entry<Date, Transacao> mapTransacao : extratoMap.entrySet()) {
-            Date data = mapTransacao.getKey();
-            Transacao transacao = mapTransacao.getValue();
+        double saldoCC = transacaoMaisAntiga.getSaldoCC();
+        double saldoCP = transacaoMaisAntiga.getSaldoCP();
 
-            if (data.before(calendario.getTime())) {
-                continue;
+        int diaAtual = transacaoMaisAntiga.getDateTime().getDate();
+        for (Transacao transacao : transacoesFiltradas) {
+            if (transacao.getDateTime().getDate() != diaAtual) {
+                diaAtual = transacao.getDateTime().getDate();
+                extrato.append("\n\n------ Saldo do Dia ------\n")
+                        .append("Saldo Conta Corrente: ").append(String.format("%.2f", saldoCC))
+                        .append("\nSaldo Conta Poupança: ").append(String.format("%.2f", saldoCP));
             }
-
-            if (!data.equals(diaAtual)) {
-                if (diaAtual != null) {
-                    extratoFormatado.append("Saldo Corrente do dia: R$ ")
-                            .append(String.format("%.2f", SaldoCC))
-                            .append("\nSaldo Poupança do dia (CP): R$ ")
-                            .append(String.format("%.2f", SaldoCP))
-                            .append("\n");
-                }
-                diaAtual = data;
-                extratoFormatado.append("\nData: ").append(formatoData.format(data)).append("\n");
-            }
-
-            String tipo = transacao.isSaque() ? "Saque" : "Depósito";
-            String contaTipo = transacao.isCP() ? "Poupança (CP)" : "Corrente";
-
-            extratoFormatado.append(tipo)
-                    .append(" - ")
-                    .append(contaTipo)
-                    .append(": R$ ")
-                    .append(String.format("%.2f", transacao.getValor()))
-                    .append("\n");
 
             if (transacao.isCP()) {
-                SaldoCP += transacao.getValor();
+                saldoCP += transacao.getValor();
+                extrato.append("\n").append(transacao.isSaque() ? "Saque - " : "Deposito - ")
+                        .append("Poupança (CP): ")
+                        .append(String.format("%.2f", transacao.getValor()))
+                        .append(" R$");
             } else {
-                SaldoCC += transacao.getValor();
+                saldoCC += transacao.getValor();
+                extrato.append("\n\nData: ").append(formatoData.format(transacao.getDateTime()))
+                        .append("\n").append(transacao.isSaque() ? "Saque - " : "Deposito - ")
+                        .append("Corrente (CC): ")
+                        .append(String.format("%.2f", transacao.getValor()))
+                        .append(" R$");
             }
         }
 
-        if (diaAtual != null) {
-            extratoFormatado.append("Saldo Corrente do dia: R$ ")
-                    .append(String.format("%.2f", SaldoCC))
-                    .append("\nSaldo Poupança do dia (CP): R$ ")
-                    .append(String.format("%.2f", SaldoCP))
-                    .append("\n");
-        }
+        extrato.append("\n\n------ Saldo do Final ------\n")
+                .append("Saldo Conta Corrente: ").append(String.format("%.2f", saldoCC))
+                .append("\nSaldo Conta Poupança: ").append(String.format("%.2f", saldoCP)).append("\n\n");
 
-        extratoFormatado.append("\n------- Saldo Atual -------\n")
-                .append("Saldo Corrente: R$ ")
-                .append(String.format("%.2f", SaldoCC))
-                .append("\nSaldo Poupança (CP): R$ ")
-                .append(String.format("%.2f", SaldoCP))
-                .append("\n");
-
-        return extratoFormatado.toString();
+        return extrato.toString();
     }
 }
