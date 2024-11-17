@@ -1,24 +1,30 @@
 package models;
 
-import java.util.Objects;
+import Utils.Utils;
+import models.Interfaces.IPessoa;
 
-public class Pessoa {
-    private String Nome;
+import java.time.LocalDate;
+import java.time.Period;
+
+public class Pessoa implements IPessoa {
+    private final String Nome;
     private Integer idade;
-    private Long cpf;
+    private final Long cpf;
+    private final LocalDate DataNascimento;
+    private final Long numeroConta;
 
-    public Pessoa(String nome, Integer idade, Long cpf) {
+    private static final Utils utils = new Utils();
+
+    public Pessoa(String nome, Integer idade, Long cpf, LocalDate dataNascimento, Long numeroConta) {
         Nome = nome;
         this.idade = idade;
         this.cpf = cpf;
+        DataNascimento = dataNascimento;
+        this.numeroConta = numeroConta;
     }
 
     public String getNome() {
         return Nome;
-    }
-
-    public void setNome(String nome) {
-        Nome = nome;
     }
 
     public Integer getIdade() {
@@ -33,7 +39,25 @@ public class Pessoa {
         return cpf;
     }
 
-    public void setCpf(Long cpf) {
-        this.cpf = cpf;
+    public LocalDate getDataNascimento() {
+        return DataNascimento;
+    }
+
+    public Long getNumeroConta() {
+        return numeroConta;
+    }
+
+    @Override
+    public void AtualizaIdade() {
+        Integer idadeAtual = Period.between(getDataNascimento(), LocalDate.now()).getYears();
+
+        if (!idadeAtual.equals(getIdade())) {
+            setIdade(idadeAtual);
+        }
+    }
+
+    @Override
+    public Conta getConta() {
+        return utils.contaMap.consultaNumeroConta(getNumeroConta());
     }
 }

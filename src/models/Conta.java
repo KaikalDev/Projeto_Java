@@ -4,26 +4,25 @@ import Utils.Utils;
 import Utils.map.Extrato;
 import models.Interfaces.IConta;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
 public class Conta implements IConta {
-    private Pessoa titular;
-    private Long numeroConta;
+    private final Pessoa titular;
+    private final Long numeroConta;
     private Double saldo;
     private Long Senha;
-    private ContaPoupanca CP;
+    private final ContaPoupanca CP;
     private final Extrato extrato;
 
-    private static Utils utils = new Utils();
+    private static final Utils utils = new Utils();
 
     public Conta(Pessoa titular, Long numeroConta, Double saldo, Long senha) {
         this.titular = titular;
         this.numeroConta = numeroConta;
         this.saldo = saldo;
         Senha = senha;
-        this.CP = new ContaPoupanca(titular, numeroConta, 0.00, senha, this);
+        this.CP = new ContaPoupanca(0.00, this);
         this.extrato = new Extrato();
     }
 
@@ -39,16 +38,8 @@ public class Conta implements IConta {
         return titular;
     }
 
-    public void setTitular(Pessoa titular) {
-        this.titular = titular;
-    }
-
     public Long getNumeroConta() {
         return numeroConta;
-    }
-
-    public void setNumeroConta(Long numeroConta) {
-        this.numeroConta = numeroConta;
     }
 
     public Double getSaldo() {
@@ -59,20 +50,8 @@ public class Conta implements IConta {
         this.saldo = saldo;
     }
 
-    public Long getSenha() {
-        return Senha;
-    }
-
-    public void setSenha(Long senha) {
-        Senha = senha;
-    }
-
     public ContaPoupanca getCP() {
         return CP;
-    }
-
-    public void setCP(ContaPoupanca CP) {
-        this.CP = CP;
     }
 
     @Override
@@ -126,7 +105,7 @@ public class Conta implements IConta {
     @Override
     public String SimularRendimnto(Integer totalMeses) {
         Double saldoSimulacao = this.getSaldo();
-        double rendimento = 0.00;
+        double rendimento;
 
         StringBuilder sb = new StringBuilder();
 

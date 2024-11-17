@@ -1,7 +1,6 @@
 package Utils.map;
 
 import models.Conta;
-import models.Pessoa;
 
 public interface IContaMap {
 

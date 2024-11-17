@@ -5,6 +5,10 @@ import Utils.map.IContaMap;
 import models.Conta;
 import models.Pessoa;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
@@ -12,7 +16,7 @@ import java.util.Scanner;
 public class Utils {
     static Scanner sc = new Scanner(System.in);
     static Random random = new Random();
-    private static Utils utils = new Utils();
+    private static final Utils utils = new Utils();
     public final IContaMap contaMap = new ContaMap();
 
     public void error(String type, String menssage) {
@@ -105,15 +109,24 @@ public class Utils {
         System.out.println("Nome: ");
         String nome = sc.nextLine();
 
+        LocalDate dataNascimento = null;
         Integer idade = null;
-        while (idade == null) {
+        while (dataNascimento == null) {
             try {
-                System.out.println("Idade: ");
-                idade = sc.nextInt();
-                sc.nextLine();
-            } catch (InputMismatchException e) {
-                error("Idade invalida", "Informe apenas numeros");
-                sc.nextLine();
+                System.out.println("Data de nascimento (dd/MM/yyyy): ");
+                String dataInput = sc.nextLine();
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                dataNascimento = LocalDate.parse(dataInput, formatter);
+
+                idade = Period.between(dataNascimento, LocalDate.now()).getYears();
+
+                if (idade < 18) {
+                    error("Idade inválida", "Para criar uma conta deve ser maior de idade");
+                    dataNascimento = null; // Resetar data se idade for menor que 18
+                }
+            } catch (DateTimeParseException e) {
+                error("Data inválida", "Informe a data no formato dd/MM/yyyy.");
             }
         }
 
@@ -128,7 +141,7 @@ public class Utils {
             numeroConta = 10000L + random.nextInt(90000);
         } while (utils.contaMap.consultaNumeroConta(numeroConta) != null);
 
-        Pessoa Titular = new Pessoa(nome, idade, cpf);
+        Pessoa Titular = new Pessoa(nome, idade, cpf, dataNascimento, numeroConta);
 
         Conta conta = new Conta(Titular, numeroConta, 0.00, senha);
 

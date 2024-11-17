@@ -6,28 +6,14 @@ import models.Interfaces.IContaPoupanca;
 import java.util.Date;
 
 public class ContaPoupanca implements IContaPoupanca {
-    private Pessoa titular;
-    private Long numeroConta;
     private Double saldo;
-    private Long senha;
-    private Conta contaCorrente;
+    private final Conta contaCorrente;
 
-    private static Utils utils = new Utils();
+    private static final Utils utils = new Utils();
 
-    public ContaPoupanca(Pessoa titular, Long numeroConta, Double saldo, Long senha, Conta ContaC) {
-        this.titular = titular;
-        this.numeroConta = numeroConta;
+    public ContaPoupanca(Double saldo, Conta ContaC) {
         this.saldo = saldo;
-        this.senha = senha;
         this.contaCorrente = ContaC;
-    }
-
-    public Pessoa getTitular() {
-        return titular;
-    }
-
-    public void setTitular(Pessoa titular) {
-        this.titular = titular;
     }
 
     public Double getSaldo() {
@@ -38,25 +24,13 @@ public class ContaPoupanca implements IContaPoupanca {
         this.saldo = saldo;
     }
 
-    public Long getNumeroConta() {
-        return numeroConta;
-    }
-
-    public void setNumeroConta(Long numeroConta) {
-        this.numeroConta = numeroConta;
-    }
-
     public Conta getContaCorrente() {
         return contaCorrente;
     }
 
-    public void setContaCorrente(Conta contaCorrente) {
-        this.contaCorrente = contaCorrente;
-    }
-
     @Override
     public void DepositarCP(Double valor, Long senha) {
-        if (!VerificaSenha(senha)) {
+        if (isInvalid(senha)) {
             utils.error("Senha incorreta", "A senha informada é invalida");
             return;
         }
@@ -69,13 +43,13 @@ public class ContaPoupanca implements IContaPoupanca {
         }
     }
 
-    private boolean VerificaSenha(Long senha) {
-        return senha.equals(this.senha);
+    private boolean isInvalid(Long senha) {
+        return !this.contaCorrente.VerificaSenha(senha);
     }
 
     @Override
     public void SacarCP(Double valor, Long senha) {
-        if (!VerificaSenha(senha)) {
+        if (isInvalid(senha)) {
             utils.error("Senha incorreta", "A senha informada é invalida");
             return;
         }

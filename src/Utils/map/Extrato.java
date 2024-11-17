@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class Extrato {
     private final List<Transacao> transacoes;
-    private static Utils utils = new Utils();
+    private static final Utils utils = new Utils();
 
     public Extrato() {
         this.transacoes = new ArrayList<>();
@@ -24,6 +24,7 @@ public class Extrato {
 
     public String print(int totalMeses) {
         SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar calendar = Calendar.getInstance();
         Calendar limite = Calendar.getInstance();
         limite.add(Calendar.MONTH, -totalMeses);
 
@@ -42,10 +43,14 @@ public class Extrato {
         double saldoCC = transacaoMaisAntiga.getSaldoCC();
         double saldoCP = transacaoMaisAntiga.getSaldoCP();
 
-        int diaAtual = transacaoMaisAntiga.getDateTime().getDate();
+        calendar.setTime(transacaoMaisAntiga.getDateTime());
+        int diaAtual = calendar.get(Calendar.DAY_OF_MONTH);
+
         for (Transacao transacao : transacoesFiltradas) {
-            if (transacao.getDateTime().getDate() != diaAtual) {
-                diaAtual = transacao.getDateTime().getDate();
+            calendar.setTime(transacao.getDateTime());
+            int diaTransacao = calendar.get(Calendar.DAY_OF_MONTH);
+            if (diaTransacao != diaAtual) {
+                diaAtual = diaTransacao;
                 extrato.append("\n\n------ Saldo do Dia ------\n")
                         .append("Saldo Conta Corrente: ").append(String.format("%.2f", saldoCC))
                         .append("\nSaldo Conta Poupança: ").append(String.format("%.2f", saldoCP));

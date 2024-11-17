@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Main {
     static Scanner sc = new Scanner(System.in);
-    private static Utils utils = new Utils();
+    private static final Utils utils = new Utils();
     private static Conta contaAtiva = null;
 
     public static Conta getContaAtiva() {
@@ -47,7 +47,7 @@ public class Main {
                     setContaAtiva(null);
                     System.out.println("Saindo...");
                     main(args);
-                    break;
+                    return;
                 case 1:
                     Double valorDeposito = utils.getvalor("\nInforme o valor a depositar:\n R$ ");
                     contaAtiva.Depositar(valorDeposito);
@@ -119,7 +119,7 @@ public class Main {
                     contaAtiva.AlteraSenha(newSenha,senhaOriginal);
                     setContaAtiva(null);
                     main(args);
-                    break;
+                    return;
             }
         }
     }

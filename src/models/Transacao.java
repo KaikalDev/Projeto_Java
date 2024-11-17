@@ -4,12 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Transacao {
-    private Date dateTime;
+    private final Date dateTime;
     private Double Valor;
-    private boolean isSaque;
-    private boolean isCP;
-    private Double SaldoCC;
-    private Double SaldoCP;
+    private final boolean isSaque;
+    private final boolean isCP;
+    private final Double SaldoCC;
+    private final Double SaldoCP;
 
     public Transacao(Date dateTime, Double valor, boolean isSaque, boolean isCP, Double saldoCC, Double saldoCP) {
         this.dateTime = dateTime;
@@ -24,10 +24,6 @@ public class Transacao {
         return dateTime;
     }
 
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
-    }
-
     public Double getValor() {
         return Valor;
     }
@@ -40,32 +36,16 @@ public class Transacao {
         return isSaque;
     }
 
-    public void setSaque(boolean saque) {
-        isSaque = saque;
-    }
-
     public boolean isCP() {
         return isCP;
-    }
-
-    public void setCP(boolean CP) {
-        isCP = CP;
     }
 
     public Double getSaldoCC() {
         return SaldoCC;
     }
 
-    public void setSaldoCC(Double saldoCC) {
-        SaldoCC = saldoCC;
-    }
-
     public Double getSaldoCP() {
         return SaldoCP;
-    }
-
-    public void setSaldoCP(Double saldoCP) {
-        SaldoCP = saldoCP;
     }
 
     @Override
