@@ -6,28 +6,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ContaMap implements IContaMap{
-    private final Map<Long, Conta> contasPorNumero;
-    private final Map<Long, Conta> contasPorCpf;
+    private final Map<Long, Conta> contasMapPorNumero;
+    private final Map<Long, Conta> contasMapPorCpf;
 
     public ContaMap() {
-        this.contasPorNumero = new HashMap<>();
-        this.contasPorCpf = new HashMap<>();
+        this.contasMapPorNumero = new HashMap<>();
+        this.contasMapPorCpf = new HashMap<>();
     }
 
     @Override
     public void Cadastro(Conta conta) {
 
-        this.contasPorNumero.put(conta.getNumeroConta(), conta);
-        this.contasPorCpf.put(conta.getTitular().getCpf(), conta);
+        this.contasMapPorNumero.put(conta.getNumeroConta(), conta);
+        this.contasMapPorCpf.put(conta.getTitular().getCpf(), conta);
     }
 
     @Override
     public Conta consultaNumeroConta(Long NumeroConta) {
-        return this.contasPorNumero.get(NumeroConta);
+        return this.contasMapPorNumero.get(NumeroConta);
     }
 
     @Override
     public Conta ConsultarCpf(Long cpf) {
-        return this.contasPorCpf.get(cpf);
+        return this.contasMapPorCpf.get(cpf);
     }
 }

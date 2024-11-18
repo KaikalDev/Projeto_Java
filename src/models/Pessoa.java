@@ -1,12 +1,11 @@
 package models;
 
 import Utils.Utils;
-import models.Interfaces.IPessoa;
 
 import java.time.LocalDate;
 import java.time.Period;
 
-public class Pessoa implements IPessoa {
+public class Pessoa {
     private final String Nome;
     private Integer idade;
     private final Long cpf;
@@ -47,7 +46,6 @@ public class Pessoa implements IPessoa {
         return numeroConta;
     }
 
-    @Override
     public void AtualizaIdade() {
         Integer idadeAtual = Period.between(getDataNascimento(), LocalDate.now()).getYears();
 
@@ -56,7 +54,6 @@ public class Pessoa implements IPessoa {
         }
     }
 
-    @Override
     public Conta getConta() {
         return utils.contaMap.consultaNumeroConta(getNumeroConta());
     }

@@ -2,12 +2,11 @@ package models;
 
 import Utils.Utils;
 import Utils.map.Extrato;
-import models.Interfaces.IConta;
 
 import java.util.Date;
 import java.util.Objects;
 
-public class Conta implements IConta {
+public class Conta {
     private final Pessoa titular;
     private final Long numeroConta;
     private Double saldo;
@@ -54,7 +53,6 @@ public class Conta implements IConta {
         return CP;
     }
 
-    @Override
     public void Depositar(Double valor) {
         Transacao transacao = new Transacao(new Date(), valor, false, false, getSaldo(), getCP().getSaldo());
         setSaldo(this.saldo + valor);
@@ -62,7 +60,6 @@ public class Conta implements IConta {
         extrato.addToExtrato(transacao);
     }
 
-    @Override
     public boolean Sacar(Double valor, Long senha) {
         if (!VerificaSenha(senha)) {
             utils.error("Senha incorreta", "A senha informada é invalida");
@@ -80,13 +77,11 @@ public class Conta implements IConta {
         return true;
     }
 
-    @Override
     public Boolean VerificaSenha(Long senha) {
         return Objects.equals(senha, this.Senha);
     }
 
 
-    @Override
     public void AlteraSenha(Long newSenha, Long senha) {
         if (Objects.equals(senha, this.Senha)) {
             this.Senha = newSenha;
@@ -102,7 +97,6 @@ public class Conta implements IConta {
                 "Numero da Conta: " + getNumeroConta();
     }
 
-    @Override
     public String SimularRendimnto(Integer totalMeses) {
         Double saldoSimulacao = this.getSaldo();
         double rendimento;

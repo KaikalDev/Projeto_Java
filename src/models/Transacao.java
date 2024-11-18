@@ -4,15 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Transacao {
-    private final Date dateTime;
+    private final Date date;
     private Double Valor;
     private final boolean isSaque;
     private final boolean isCP;
     private final Double SaldoCC;
     private final Double SaldoCP;
 
-    public Transacao(Date dateTime, Double valor, boolean isSaque, boolean isCP, Double saldoCC, Double saldoCP) {
-        this.dateTime = dateTime;
+    public Transacao(Date date, Double valor, boolean isSaque, boolean isCP, Double saldoCC, Double saldoCP) {
+        this.date = date;
         Valor = valor;
         this.isSaque = isSaque;
         this.isCP = isCP;
@@ -21,7 +21,7 @@ public class Transacao {
     }
 
     public Date getDateTime() {
-        return dateTime;
+        return date;
     }
 
     public Double getValor() {
@@ -51,7 +51,7 @@ public class Transacao {
     @Override
     public String toString() {
         SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
-        String dataFormatada = formatoData.format(dateTime);
+        String dataFormatada = formatoData.format(date);
 
         String header = "\n------ Transação ------\n";
 

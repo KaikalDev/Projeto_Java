@@ -1,11 +1,10 @@
 package models;
 
 import Utils.Utils;
-import models.Interfaces.IContaPoupanca;
 
 import java.util.Date;
 
-public class ContaPoupanca implements IContaPoupanca {
+public class ContaPoupanca {
     private Double saldo;
     private final Conta contaCorrente;
 
@@ -28,7 +27,6 @@ public class ContaPoupanca implements IContaPoupanca {
         return contaCorrente;
     }
 
-    @Override
     public void DepositarCP(Double valor, Long senha) {
         if (isInvalid(senha)) {
             utils.error("Senha incorreta", "A senha informada é invalida");
@@ -47,7 +45,6 @@ public class ContaPoupanca implements IContaPoupanca {
         return !this.contaCorrente.VerificaSenha(senha);
     }
 
-    @Override
     public void SacarCP(Double valor, Long senha) {
         if (isInvalid(senha)) {
             utils.error("Senha incorreta", "A senha informada é invalida");

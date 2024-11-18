@@ -16,7 +16,6 @@ import java.util.Scanner;
 public class Utils {
     static Scanner sc = new Scanner(System.in);
     static Random random = new Random();
-    private static final Utils utils = new Utils();
     public final IContaMap contaMap = new ContaMap();
 
     public void error(String type, String menssage) {
@@ -97,6 +96,7 @@ public class Utils {
         }
 
         if (contaAtiva.VerificaSenha(senha)) {
+            contaAtiva.getTitular().AtualizaIdade();
             return contaAtiva;
         } else {
             error("Senha incorreta", "A senha informada é invalida");
@@ -139,7 +139,7 @@ public class Utils {
         Long numeroConta;
         do {
             numeroConta = 10000L + random.nextInt(90000);
-        } while (utils.contaMap.consultaNumeroConta(numeroConta) != null);
+        } while (this.contaMap.consultaNumeroConta(numeroConta) != null);
 
         Pessoa Titular = new Pessoa(nome, idade, cpf, dataNascimento, numeroConta);
 
