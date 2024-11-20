@@ -18,6 +18,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        utils.test();
         do {
             System.out.println("------- LKRA_Bank -------");
             System.out.println("1 - Login \n2 - Criar conta\n0 - Sair");
@@ -108,7 +109,7 @@ public class Main {
                         }
                     }
 
-                    System.out.println(contaAtiva.printExtrato(TotalMesesExtrato));
+                    System.out.println(contaAtiva.getExtrato().print(TotalMesesExtrato));
                     break;
                 case 7:
                     Long senhaOriginal = utils.getSenha("Iforme sua senha");

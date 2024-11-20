@@ -60,15 +60,13 @@ public class Extrato {
                 saldoCP += transacao.getValor();
                 extrato.append("\n").append(transacao.isSaque() ? "Saque - " : "Deposito - ")
                         .append("Poupança (CP): ")
-                        .append(String.format("%.2f", transacao.getValor()))
-                        .append(" R$");
+                        .append(String.format("%.2f R$", transacao.getValor()));
             } else {
                 saldoCC += transacao.getValor();
                 extrato.append("\n\nData: ").append(formatoData.format(transacao.getDateTime()))
                         .append("\n").append(transacao.isSaque() ? "Saque - " : "Deposito - ")
                         .append("Corrente (CC): ")
-                        .append(String.format("%.2f", transacao.getValor()))
-                        .append(" R$");
+                        .append(String.format("%.2f R$", transacao.getValor()));
             }
         }
 

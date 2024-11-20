@@ -3,6 +3,7 @@ package models;
 import Utils.Utils;
 import Utils.map.Extrato;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -27,10 +28,6 @@ public class Conta {
 
     public Extrato getExtrato() {
         return this.extrato;
-    }
-
-    public String printExtrato(int TotalMeses) {
-        return this.extrato.print(TotalMeses);
     }
 
     public Pessoa getTitular() {
@@ -98,7 +95,7 @@ public class Conta {
     }
 
     public String SimularRendimnto(Integer totalMeses) {
-        Double saldoSimulacao = this.getSaldo();
+        Double saldoSimulacao = saldo;
         double rendimento;
 
         StringBuilder sb = new StringBuilder();
@@ -106,16 +103,16 @@ public class Conta {
         sb.append("------ Simulação do rendimento ------\n");
         sb.append("Mês | Rendimento | Saldo\n");
 
-        int mesAtual = java.util.Calendar.getInstance().get(java.util.Calendar.MONTH) + 1;
+        int mesAtual = Calendar.getInstance().get(Calendar.MONTH);
 
         for (int mes = 0; mes < totalMeses; mes++) {
-            int mesSimulacao = (mesAtual + mes - 1) % 12 + 1;
+            int mesSimulacao = (mesAtual + mes) % 12 + 1;
 
             rendimento = (saldoSimulacao / 100) * 0.05;
 
             saldoSimulacao += rendimento;
 
-            sb.append(String.format("%2d  | %.2f R$  | %.2f R$\n", mesSimulacao, rendimento, saldoSimulacao));
+            sb.append(String.format("%02d  | %.2f R$  | %.2f R$\n", mesSimulacao, rendimento, saldoSimulacao));
         }
 
         return sb.toString();

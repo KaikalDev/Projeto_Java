@@ -4,11 +4,13 @@ import Utils.map.ContaMap;
 import Utils.map.IContaMap;
 import models.Conta;
 import models.Pessoa;
+import models.Transacao;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
@@ -123,7 +125,7 @@ public class Utils {
 
                 if (idade < 18) {
                     error("Idade inválida", "Para criar uma conta deve ser maior de idade");
-                    dataNascimento = null; // Resetar data se idade for menor que 18
+                    dataNascimento = null;
                 }
             } catch (DateTimeParseException e) {
                 error("Data inválida", "Informe a data no formato dd/MM/yyyy.");
@@ -176,5 +178,34 @@ public class Utils {
         } while (resposta < 0 || resposta > 7);
 
         return resposta;
+    }
+
+    public void test() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataNascimento = LocalDate.parse("01/01/2000", formatter);
+        Pessoa Titular = new Pessoa("Test", 24, 99999999999L, dataNascimento, 11111L);
+        Conta conta = new Conta(Titular, 11111L, 400.00, 1234L);
+
+        Transacao transacao = new Transacao(new Date("08/07/2024"), 1000.00, false, false, 0.00,0.00);
+        Transacao transacao1 = new Transacao(new Date("09/07/2024"), 500.00, true, false, 1000.00,0.00);
+        Transacao transacao1_1 = new Transacao(new Date("09/07/2024"), 500.00, false, true, 500.00,0.00);
+        Transacao transacao3 = new Transacao(new Date("10/06/2024"), 100.00, false, false, 500.00,500.00);
+        Transacao transacao3_1 = new Transacao(new Date("10/06/2024"), 100.00, true, true, 600.00,500.00);
+        Transacao transacao4 = new Transacao(new Date("12/10/2024"), 300.00, true, false, 600.00,400.00);
+        Transacao transacao5 = new Transacao(new Date("12/10/2024"), 300.00, true, false, 300.00,400.00);
+        Transacao transacao6 = new Transacao(new Date("10/11/2024"), 400.00, false, false, 0.00,400.00);
+        Transacao transacao6_1 = new Transacao(new Date("10/11/2024"), 400.00, true, true, 400.00,400.00);
+
+        conta.getExtrato().addToExtrato(transacao);
+        conta.getExtrato().addToExtrato(transacao1);
+        conta.getExtrato().addToExtrato(transacao1_1);
+        conta.getExtrato().addToExtrato(transacao3);
+        conta.getExtrato().addToExtrato(transacao3_1);
+        conta.getExtrato().addToExtrato(transacao4);
+        conta.getExtrato().addToExtrato(transacao5);
+        conta.getExtrato().addToExtrato(transacao6);
+        conta.getExtrato().addToExtrato(transacao6_1);
+
+        contaMap.Cadastro(conta);
     }
 }
