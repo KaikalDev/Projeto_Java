@@ -56,6 +56,11 @@ public class Utils {
                 System.out.print(text);
                 valor = sc.nextDouble();
                 sc.nextLine();
+
+                if (valor <= 0) {
+                    error("Valor invalido","Informe um valor positivo");
+                    valor = null;
+                }
             } catch (InputMismatchException e) {
                 error("Valor invalido", "Informe o valor no formato (0.00)");
                 sc.nextLine();
@@ -68,8 +73,19 @@ public class Utils {
         System.out.println("\n------ Login ------");
 
         System.out.println("Informe o numero da conta ou CPF do titular: ");
-        Long user = Long.parseLong(sc.nextLine().replace(".","")
-                .replace("-","").replace(" ", ""));
+        String userString = sc.nextLine().replace(".","")
+                .replace("-","").replace(" ", "");
+
+        Long user = null;
+        while (user == null) {
+            try {
+                user = Long.parseLong(userString);
+
+            } catch (NumberFormatException e) {
+                error("cpf invalido", "Informe um cpf ou numero da conta valido");
+                userString = sc.nextLine();
+            }
+        }
 
         Conta contaAtiva = contaMap.consultaNumeroConta(user);
         if (contaAtiva == null) {

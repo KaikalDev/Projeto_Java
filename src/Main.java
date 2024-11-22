@@ -37,7 +37,7 @@ public class Main {
                     System.out.println("Saindo...");
                     return;
                 default:
-                    utils.error("Opção invalida", "Responda com 1 ou 2");
+                    utils.error("Opção invalida", "Responda com 1, 2 ou 0");
             }
         } while (contaAtiva == null);
 
@@ -55,17 +55,17 @@ public class Main {
                     break;
                 case 2:
                     Double valorSaque = utils.getvalor("\nInforme o valor a Sacar:\n R$ ");
-                    Long senhaSaque = utils.getSenha("Iforme a senha para Sacar");
+                    Long senhaSaque = utils.getSenha("Informe a senha para Sacar");
                     contaAtiva.Sacar(valorSaque,senhaSaque);
                     break;
                 case 3:
                     Double valorDepositoCP = utils.getvalor("\nInforme o valor para depositar na poupança:\n R$ ");
-                    Long senhaDepositoCP = utils.getSenha("Iforme sua senha");
+                    Long senhaDepositoCP = utils.getSenha("Informe sua senha");
                     contaAtiva.getCP().DepositarCP(valorDepositoCP,senhaDepositoCP);
                     break;
                 case 4:
                     Double valorSaqueCP = utils.getvalor("\nInforme o valor para sacar da poupança:\n R$ ");
-                    Long senhaSaqueCP = utils.getSenha("Iforme sua senha");
+                    Long senhaSaqueCP = utils.getSenha("Informe sua senha");
                     contaAtiva.getCP().SacarCP(valorSaqueCP,senhaSaqueCP);
                     break;
                 case 5:
@@ -112,11 +112,11 @@ public class Main {
                     System.out.println(contaAtiva.getExtrato().print(TotalMesesExtrato));
                     break;
                 case 7:
-                    Long senhaOriginal = utils.getSenha("Iforme sua senha");
+                    Long senhaOriginal = utils.getSenha("Informe sua senha");
                     if (!contaAtiva.VerificaSenha(senhaOriginal)) {
                         utils.error("Senha incorreta", "A senha informada é invalida");
                     }
-                    Long newSenha = utils.getSenha("Iforme sua Nova senha (4 Digitos): ");
+                    Long newSenha = utils.getSenha("Informe sua Nova senha (4 Digitos): ");
                     contaAtiva.AlteraSenha(newSenha,senhaOriginal);
                     setContaAtiva(null);
                     main(args);
